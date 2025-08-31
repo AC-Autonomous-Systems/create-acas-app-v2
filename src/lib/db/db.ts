@@ -50,7 +50,7 @@ export let client: Sql;
 if (process.env.NODE_ENV === 'development') {
   if (!(globalThis as any)._pgClient) {
     (globalThis as any)._pgClient = postgres(process.env.DB_CONNECTION_STRING, {
-      max: 100,
+      max: 75,
     });
   }
   client = (globalThis as any)._pgClient;
@@ -60,7 +60,7 @@ if (process.env.NODE_ENV === 'development') {
       ? process.env.TEST_DB_CONNECTION_STRING!
       : process.env.DB_CONNECTION_STRING,
     {
-      max: 100,
+      max: 75,
     }
   );
 }

@@ -28,7 +28,7 @@ export function generateRandomString(length: number): string {
   let resultStr = '';
   for (let i = 0; i < length; i++) {
     resultStr += lettersAndDigits.charAt(
-      Math.floor(Math.random() * lettersAndDigits.length)
+      Math.floor(Math.random() * lettersAndDigits.length),
     );
   }
   return resultStr;
@@ -76,6 +76,13 @@ export const usdFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2, // Ensure 2 decimal places
 });
 
+export const usdFormatterWithNoDecimals = new Intl.NumberFormat('en-US', {
+  style: 'currency', // Format as currency
+  currency: 'USD', // Use US dollars
+  minimumFractionDigits: 0, // Ensure 0 decimal places
+  maximumFractionDigits: 0, // Ensure 0 decimal places
+});
+
 export const prettyJsonIfValid = (input: string): string => {
   try {
     const parsed = JSON.parse(input);
@@ -83,4 +90,38 @@ export const prettyJsonIfValid = (input: string): string => {
   } catch (error) {
     return input; // Return the original string if it's not valid JSON
   }
+};
+
+export const validateNumber = (value: string): boolean => {
+  return (
+    (/^[\d,.]+$/.test(value) && !isNaN(parseFloat(value.replace(/,/g, '')))) ||
+    value === ''
+  );
+};
+
+export function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
+
+export const formatNumberWithCommas = (
+  value: string,
+  digits: number = 2,
+): string => {
+  // Remove all non-digit characters except decimal point
+  const cleanValue = value.replace(/[^\d.]/g, '');
+
+  if (!cleanValue) return '';
+
+  // Split by decimal point
+  const parts = cleanValue.split('.');
+
+  // Add commas to the integer part
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  // If there's a decimal part, limit its length
+  if (parts.length > 1) {
+    return `${parts[0]}.${parts[1].slice(0, digits)}`;
+  }
+
+  return parts[0];
 };

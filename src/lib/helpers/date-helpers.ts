@@ -22,6 +22,8 @@
   SOFTWARE.
  */
 
+import { type DateArg, parseISO } from "date-fns";
+
 export function isValidDateString(
   dateString: string | null | undefined
 ): boolean {
@@ -81,4 +83,21 @@ export function timeDifference(date1: Date, date2: Date) {
   }
 
   return result;
+}
+
+export function parseDateArg(arg?: undefined | DateArg<Date>) {
+  switch (typeof arg) {
+    case 'number': {
+      const date = new Date(arg);
+      return Number.isNaN(date.getTime()) ? undefined : date;
+    }
+    case 'string': {
+      const date = parseISO(arg);
+      return Number.isNaN(date.getTime()) ? undefined : date;
+    }
+    default: {
+      if (arg instanceof Date) return arg;
+      return undefined;
+    }
+  }
 }

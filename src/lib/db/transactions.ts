@@ -22,39 +22,38 @@
   SOFTWARE.
  */
 
-import nodemailer from 'nodemailer';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 
-export default class NodemailerAdapter {
-  private transporter: nodemailer.Transporter<
-    SMTPTransport.SentMessageInfo,
-    SMTPTransport.Options
-  >;
+/**
+ * Run a transaction with retries.
+ * @param db - The database instance
+ * @param fn - The transactional function to execute
+ * @param maxRetries - Max number of retry attempts, 30 by default.
+ */
+export async function runTransactionWithRetries<T>(
+  db: PostgresJsDatabase<Record<string, never>> & {
+    $client: postgres.Sql;
+  },
+  fn: (tx: any) => Promise<T>,
+  maxRetries: number = 30,
+): Promise<T> {
+  let attempt = 0;
+  let lastError: unknown;
 
-  constructor(transport: SMTPTransport | SMTPTransport.Options | string) {
-    const transporter = nodemailer.createTransport(transport);
-    this.transporter = transporter;
+  while (attempt < maxRetries) {
+    try {
+      return await db.transaction(fn);
+    } catch (err) {
+      lastError = err;
+      attempt++;
+
+      // Optional: add exponential backoff
+      await new Promise((res) =>
+        setTimeout(res, Math.min(1000 * attempt, 5000)),
+      );
+    }
   }
 
-  async sendHTML({
-    fromEmail,
-    toEmail,
-    subject,
-    html,
-    replyToEmail,
-  }: {
-    fromEmail: string;
-    toEmail: string[];
-    subject: string;
-    html: string;
-    replyToEmail?: string;
-  }) {
-    await this.transporter.sendMail({
-      from: fromEmail,
-      to: toEmail,
-      ...(replyToEmail && { replyTo: replyToEmail }),
-      subject: subject,
-      html: html,
-    });
-  }
+  throw lastError;
 }

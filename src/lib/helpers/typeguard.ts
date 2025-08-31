@@ -22,15 +22,39 @@
   SOFTWARE.
  */
 
+import { z } from 'zod';
+
 export const isErrorResponse = (
-  response: any | { error: string }
+  response: any | { error: string },
 ): response is { error: string } => {
   return (response as { error: string }).error !== undefined;
 };
 
 export const isInConstArray = <T extends readonly string[]>(
   array: T,
-  value: string
+  value: string,
 ): value is T[number] => {
   return array.includes(value as T[number]);
 };
+
+// ISO 8601 regex for basic validation
+const iso8601Regex =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[\+\-]\d{2}:\d{2})$/;
+
+export const iso8601String = z
+  .string()
+  .refine((val) => iso8601Regex.test(val) && !isNaN(Date.parse(val)), {
+    message: 'Invalid ISO8601 date string',
+  });
+
+export const numberWithCommasSchema = z
+  .string()
+  .transform((val) => {
+    // Remove thousands separators (commas) and replace decimal commas with dots if applicable
+    const cleanedVal = val.replace(/,/g, ''); // Removes commas used as thousands separators
+    // If your locale uses comma as decimal separator, you'd also need:
+    // const cleanedVal = val.replace(/\./g, '').replace(/,/g, '.'); // For locales where . is thousands and , is decimal
+
+    return Number(cleanedVal);
+  })
+  .pipe(z.number());
