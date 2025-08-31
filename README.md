@@ -1,10 +1,10 @@
 ## Tech stack:
 
-- Next.js
-- Drizzle ORM
-- Tailwind CSS
-- Postgres
-- TypeScript
+- [Next.js](https://nextjs.org)
+- [Drizzle ORM](https://orm.drizzle.team)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Postgres](https://www.postgresql.org)
+- [TypeScript](https://www.typescriptlang.org)
 
 ## Benefits of using this monorepo:
 
