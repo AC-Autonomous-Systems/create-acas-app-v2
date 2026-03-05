@@ -22,11 +22,11 @@
   SOFTWARE.
  */
 
-import { isValidDateString } from '@/lib/helpers/date-helpers';
+import { isValidDateString } from '@/lib/misc-helpers/date-helpers';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
 
 export function getPageAndItemsPerPageFromSearchParams(
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
 ): { page: number; itemsPerPage: number } {
   const pageString = searchParams.get('page');
   const itemsPerPageString = searchParams.get('itemsPerPage');
@@ -51,7 +51,7 @@ export function getPageAndItemsPerPageFromSearchParams(
  * @returns Parsed start and end date.
  */
 export function getStartDateAndEndDateFromSearchParams(
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
 ): { startDate: Date; endDate: Date } {
   const startDateString = searchParams.get('startDate');
   const endDateString = searchParams.get('endDate');

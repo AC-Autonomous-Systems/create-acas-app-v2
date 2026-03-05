@@ -31,14 +31,6 @@ import {
   UploadCloudIcon,
   TrashIcon,
 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -57,9 +49,11 @@ import { toast } from 'sonner';
 export default function FilesUploader({
   onSingleDocumentUpload,
   onAllDocumentsUploaded,
+  className,
 }: {
   onSingleDocumentUpload: (file: File) => Promise<void>;
   onAllDocumentsUploaded: () => Promise<void>;
+  className?: string;
 }) {
   /* -------------------------------------------------------------------------- */
   /*                                    Hooks                                   */
@@ -143,14 +137,12 @@ export default function FilesUploader({
   /*                                 JSX Return                                 */
   /* -------------------------------------------------------------------------- */
   return (
-    <div className="w-full h-full flex flex-col @container/uploader-parent">
-      {/* <InvisibleUploadDropzone
-        files={files}
-        setFiles={setFiles}
-        isDialogOpen={open}
-        setIsDialogOpen={setOpen}
-        dragCounter={dragCounter}
-      /> */}
+    <div
+      className={cn(
+        'w-full h-full flex flex-col @container/uploader-parent',
+        className,
+      )}
+    >
       <div
         className={cn(
           'w-full h-full border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer',

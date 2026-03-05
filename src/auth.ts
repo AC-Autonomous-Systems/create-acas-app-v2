@@ -58,7 +58,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     session: async function ({ session, token }) {
       // DB logic to fetch the user information (such as role) from the DB.
-
       return session;
     },
   },
