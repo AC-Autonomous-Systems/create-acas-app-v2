@@ -1,7 +1,7 @@
 {
-  "name": "your-app-name-here",
+  "name": "your-app-name",
   "dockerComposeFile": "../docker-compose.yml",
-  "service": "your-service-name-here",
+  "service": "your-service-name",
   "workspaceFolder": "/app",
   "remoteUser": "node",
   "customizations": {
