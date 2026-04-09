@@ -1,0 +1,23 @@
+{
+  "name": "your-app-name-here",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "your-service-name-here",
+  "workspaceFolder": "/app",
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "workbench.iconTheme": "material-icon-theme"
+      },
+      "extensions": [
+        "stackbreak.comment-divider",
+        "esbenp.prettier-vscode",
+        "PKief.material-icon-theme",
+        "GitHub.copilot-chat",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+  "overrideCommand": false
+}
