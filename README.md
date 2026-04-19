@@ -19,3 +19,11 @@
 ## Start the dev server
 
 `npm run dev`
+
+## Run backend tests
+
+`npm run test:backend`
+
+## Run backend test coverage
+
+`npm run test:backend:coverage`

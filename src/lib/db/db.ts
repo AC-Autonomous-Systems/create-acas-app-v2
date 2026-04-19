@@ -1,7 +1,7 @@
 /**
   MIT License
 
-  Copyright (c) 2025 AC Autonomous Systems, LLC
+  Copyright (c) 2026 AC Autonomous Systems, LLC
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the “Software”), to deal
@@ -24,6 +24,7 @@
 
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres, { Sql } from 'postgres';
+import { getDatabaseConnectionString } from '@/lib/db/connection-strings';
 
 /* -------------------------------------------------------------------------- */
 /*                      Loading env variables and verify                      */
@@ -31,17 +32,14 @@ import postgres, { Sql } from 'postgres';
 import * as dotenv from 'dotenv';
 dotenv.config({
   path: '.env.local',
+  ...(process.env.NODE_ENV === 'development' ? { override: true } : {}),
 });
 
 if (!process.env.DB_CONNECTION_STRING) {
   throw new Error('DB_CONNECTION_STRING is not set');
-} else if (
-  process.env.NODE_ENV === 'test' &&
-  !process.env.TEST_DB_CONNECTION_STRING
-) {
-  throw new Error('TEST_DB_CONNECTION_STRING is not set');
 }
 
+const CONNECTION_STRING = getDatabaseConnectionString();
 /* -------------------------------------------------------------------------- */
 /*                           Initialize the client:                           */
 /* -------------------------------------------------------------------------- */
@@ -49,20 +47,15 @@ if (!process.env.DB_CONNECTION_STRING) {
 export let client: Sql;
 if (process.env.NODE_ENV === 'development') {
   if (!(globalThis as any)._pgClient) {
-    (globalThis as any)._pgClient = postgres(process.env.DB_CONNECTION_STRING, {
+    (globalThis as any)._pgClient = postgres(CONNECTION_STRING, {
       max: 75,
     });
   }
   client = (globalThis as any)._pgClient;
 } else {
-  client = postgres(
-    process.env.NODE_ENV === 'test'
-      ? process.env.TEST_DB_CONNECTION_STRING!
-      : process.env.DB_CONNECTION_STRING,
-    {
-      max: 75,
-    }
-  );
+  client = postgres(CONNECTION_STRING, {
+    max: 75,
+  });
 }
 
 export const db = drizzle(client, {
