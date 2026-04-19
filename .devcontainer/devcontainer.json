@@ -1,7 +1,7 @@
 {
   "name": "your-app-name",
   "dockerComposeFile": "../docker-compose.yml",
-  "service": "your-service-name",
+  "service": "your-app-name",
   "workspaceFolder": "/app",
   "remoteUser": "node",
   "customizations": {
@@ -14,8 +14,10 @@
         "stackbreak.comment-divider",
         "esbenp.prettier-vscode",
         "PKief.material-icon-theme",
+        "eamodio.gitlens",
         "GitHub.copilot-chat",
-        "eamodio.gitlens"
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next"
       ]
     }
   },
