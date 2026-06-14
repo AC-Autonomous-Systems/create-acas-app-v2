@@ -19,6 +19,9 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=300
       - NEXT_WEBPACK_USEPOLLING=true
+    security_opt:
+      - seccomp=unconfined
+      - apparmor=unconfined
     cap_add:
       - SYS_ADMIN
     depends_on:
