@@ -5,11 +5,19 @@ FROM node:22 AS base
 # Set the working directory
 WORKDIR /app
 
-# Install dependencies
-RUN apt-get update
+# Install system dependencies & PostgreSQL client 16.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates curl \
+  && . /etc/os-release \
+  && curl --fail --show-error --location https://www.postgresql.org/media/keys/ACCC4CF8.asc --output /usr/share/keyrings/postgresql.asc \
+  && echo "deb [signed-by=/usr/share/keyrings/postgresql.asc] https://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends postgresql-client-16 \
+  && rm -rf /var/lib/apt/lists/*
 
-# Install codex CLI globally (as root so it lands in /usr/local/bin, accessible to all users)
+# Install Codex & Claude Code CLI globally (as root so it lands in /usr/local/bin, accessible to all users)
 RUN npm install -g @openai/codex
+RUN npm install -g @anthropic-ai/claude-code
 
 # Install dependencies as the node user so mounted volumes inherit the right owner.
 COPY --chown=node:node package.json package-lock.json ./
